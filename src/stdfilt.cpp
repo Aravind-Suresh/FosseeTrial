@@ -10,13 +10,14 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 
 #include "opencv2/core/utility.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 
 /**
- * [stdfilt Computes local standard deviation of the image]
+ * [stdfilt - Computes local standard deviation of the image]
  * @param  src   [source image (any number of channels)]
  * @param  nhood [window size for computing standard deviation, default = 3]
  * @return dst   [final image]
@@ -36,9 +37,10 @@ cv::Mat stdfilt(cv::Mat src, int nhood = 3) {
    *
    * Example:
    * 			cv::Mat dst1 = stdfilt(img);
+   *
    * 			cv::Mat dst2 = stdfilt(img, 5);
    */
-  
+
   cv::Mat srcC, srcSq, temp1, temp2, diff, pos, dst;
 
   // Defining the mean kernel of size (nhood x nhood)
