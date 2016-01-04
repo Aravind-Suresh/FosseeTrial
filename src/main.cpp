@@ -18,14 +18,37 @@
 #include "util.h"
 
 int main(int argc, char **argv) {
+  /**
+   * Trial:
+   * 			// FOR STDFILT DEMO
+   * 			./bin/demo images/test1.jpg 0
+   *
+   * 			// FOR IMQUANTIZE DEMO
+   * 			./bin/demo images/test1.jpg 1
+   */
+  if(argc != 3) {
+    std::cout<<"Usage : "<<argv[0]<<" <source image> <mode>"<<std::endl;
+    std::cout<<"<mode> : 0 for stdfilt demo, 1 for imquantize demo"<<std::endl;
+    exit(-1);
+  }
+
   cv::Mat img = cv::imread(argv[1], 0);
   cv::Mat dst;
-  std::vector<int> thresh = linspace(0, 255, 3);
 
-  dst = stdfilt(img);
-  // dst = imquantize(img, thresh);
-  // dst = imquantize(img, 100);
-  // cv::normalize(dst, dst, 0, 255, cv::NORM_MINMAX, -1);
+  int mode = atoi(argv[2]);
+
+  if(mode) {
+      dst = stdfilt(img);
+  }
+  else {
+    // Constructing linearly spaced vector thresh
+    std::vector<int> thresh = linspace(0, 255, 3);
+    dst = imquantize(img, thresh);
+    // dst = imquantize(img, 100);
+
+    // Normalizing image for display purpose
+    cv::normalize(dst, dst, 0, 255, cv::NORM_MINMAX, -1);
+  }
 
   cv::imshow("src", img);
   cv::imshow("img", dst);

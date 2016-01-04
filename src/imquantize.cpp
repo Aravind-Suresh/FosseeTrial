@@ -3,6 +3,9 @@
  * Created on 2016-01-03 02:31
  *
  * C++ implementation of MATLAB function imquantize
+ *
+ * References:
+ * 			http://in.mathworks.com/help/images/ref/imquantize.html
  */
 
 // Necessary headers

@@ -3,6 +3,9 @@
  * Created on 2015-12-28 19:24
  *
  * C++ implementation of MATLAB function stdfilt
+ *
+ * References:
+ * 			http://in.mathworks.com/help/images/ref/stdfilt.html
  */
 
 // Necessary headers
