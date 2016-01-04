@@ -38,4 +38,4 @@ obj/main.o: src/main.cpp
 # Delete all the temporary files we've created so far
 clean:
 	rm -rf obj/*.o
-	rm -rf bin/oic
+	rm -rf bin/*
