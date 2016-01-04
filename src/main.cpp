@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     cv::normalize(dst, dst, 0, 255, cv::NORM_MINMAX, -1);
   }
 
-  cv::imshow("src", img);
-  cv::imshow("img", dst);
+  cv::imshow("Input image", img);
+  cv::imshow("Output image", dst);
   cv::waitKey(0);
 }
