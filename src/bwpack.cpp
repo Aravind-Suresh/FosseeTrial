@@ -25,9 +25,9 @@
   * @param  size   [size of array]
   * @return val    [value of the integer]
   */
- int bit32Int(int* binArr, int size) {
+ int bit32Int(const int* binArr, int size) {
    int val = 0, cur = 1;
-   for(i=0; i<size; ++i) {
+   for(int i=0; i<size; ++i) {
      // Incrementing val with place value of the bit if its 1
      if(binArr[i]) val += cur;
      cur = cur << 1;
@@ -72,8 +72,8 @@
   // Transposing srcPad so as to traverse it columnwise
   cv::Mat srcPadT = srcPad.t();
 
-  // CV_32S1 - 32 bit signed integer, 1 channel
-  cv::Mat dst = cv::Mat::zeros(size, CV_32S1);
+  // CV_32SC1 - 32 bit signed integer, 1 channel
+  cv::Mat dst = cv::Mat::zeros(size, CV_32SC1);
 
   for(int i=0; i<cols; ++i) {
     for(int j=0; j<rowsF; ++j) {
