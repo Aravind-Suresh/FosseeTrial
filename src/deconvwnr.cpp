@@ -19,7 +19,7 @@
  #include "opencv2/highgui.hpp"
  #include "opencv2/imgproc.hpp"
 
-cv::Mat blurEdge(cv::Mat src, int d) {
+ cv::Mat blurEdge(cv::Mat src, int d) {
   int h = src.rows, w = src.cols;
   cv::Mat srcPad, srcBlur;
   cv::copyMakeBorder(src, srcPad, d, d, d, d, cv::BORDER_WRAP);
@@ -37,20 +37,37 @@ cv::Mat blurEdge(cv::Mat src, int d) {
   return src*weights + srcBlur*(1.0 - weights);
 }
 
-cv::Mat motionKernel(float angle, int d, int sz) {
-  cv::Mat kern = cv::Mat::ones((1, d), CV_32F);
-  float cosA = cos(angle), sinA = sin(angle);
-  int sz2 = sz/2;
+cv::Mat constructMat(psf, cv::Size size) {
+  cv::Mat dst = cv::Mat::zeros(size, CV_32F);
+  int rows = size.height, cols = size.width;
 
+  for(int i=0; i<rows; ++i) {
+    for(int j=0; j<cols; ++j) {
+      dst.at<float>(i, j) = psf(i, j);
+    }
+  }
+  return dst;
 }
 
-cv::Mat defocusKernel(int d, int sz) {
-  cv::Mat kern = cv::Mat::zeros(cv::Size(sz, sz), CV_8UC1);
-  cv::circle(kern, cv::Size(sz, sz), d, 255, -1, cv::LINE_AA, 1);
-  kern.convertTo(srcC, CV_32F, 1.0/255);
-  return kern;
-}
+cv::deconvwnr(cv::Mat src, ) {
+  // Assume src is gray image
+  // noise: 10**(-0.1*SNR)
 
-cv::deconvwnr(cv::Mat src) {
-  assert()
+  int rows = src.rows, cols = src.cols;
+  cv::Mat srcF, srcBlurEdge, srcPad, srcDft;
+  src.convertTo(srcF, CV_32F, 1.0/255);
+  srcBlurEdge = blurEdge(src, d);
+
+  int rowsF = cv::getOptimalDFTSize(src.rows);
+  int colsF = cv::getOptimalDFTSize(src.cols);
+
+  cv::copyMakeBorder(srcBlurEdge, srcPad, 0, rowsF-rows, 0, colsF-cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+  cv::Mat planes[] = { cv::Mat_<float>(srcPad), cv::Mat::zeros(srcPad.size(), CV_32F) };
+  cv::merge(planes, 2, srcDft);
+  cv::dft(srcDft, srcDft);
+
+  cv::Mat matPsf = cv::constructMat(psf, src.size());
+  matPsf = matPsf/cv::sum(matPsf);
+  cv::copyMakeBorder(matPsf, matPsfPad, 0, rowsF-rows, 0, colsF-cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+
 }
