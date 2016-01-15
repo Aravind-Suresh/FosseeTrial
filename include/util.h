@@ -27,4 +27,8 @@ cv::Mat imquantize(cv::Mat src, int thresh);
 // Source: src/stdfilt.cpp
 cv::Mat stdfilt(cv::Mat src, int nhood = 3);
 
+// Source: src/bwpack.cpp
+int bit32Int(int* binArr, int size);
+cv::Mat bwpack(cv::Mat src);
+
 #endif
