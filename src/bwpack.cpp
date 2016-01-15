@@ -19,14 +19,17 @@
  #include "opencv2/highgui.hpp"
  #include "opencv2/imgproc.hpp"
 
+ // For declaring 32-bit integers
+ #include <stdint.h>
+
  /**
   * [bit32Int Function to return integer given array of bits - 0,1]
   * @param  binArr [input array]
   * @param  size   [size of array]
   * @return val    [value of the integer]
   */
- int bit32Int(const int* binArr, int size) {
-   int val = 0, cur = 1;
+ int32_t bit32Int(const int* binArr, int size) {
+   int32_t val = 0, cur = 1;
    for(int i=0; i<size; ++i) {
      // Incrementing val with place value of the bit if its 1
      if(binArr[i]) val += cur;
@@ -55,14 +58,14 @@
     * The first pixel in the 32nd input row corresponds to the most significant bit of this same element.
     *
     * Example:
-    * 			cv::Mat dst = bwpack(src);
+    * 			cv::Mat dst = bwpack(img);
     */
   int rows = src.rows, cols = src.cols;
 
   // According to MATLAB definition
   int SIZE_INT = 32, idx = 0;
   int rowsF = int(ceil(1.0*rows/SIZE_INT));
-  cv::Size size(rowsF, cols);
+  cv::Size size(cols, rowsF);
 
   // Padding src image so as to account for higher bits
   cv::Mat srcPad;
@@ -78,11 +81,10 @@
   for(int i=0; i<cols; ++i) {
     for(int j=0; j<rowsF; ++j) {
       // Constructing a ptr and traversing
-      const int* ptr = srcPadT.ptr<int>(j*SIZE_INT);
-      dst.at<int>(j, i) = bit32Int(ptr, SIZE_INT);
+      const int32_t* ptr = srcPadT.ptr<int32_t>(j*SIZE_INT);
+      dst.at<int32_t>(j, i) = bit32Int(ptr, SIZE_INT);
     }
   }
-
   // Returning bwpacked mat
   return dst;
 }

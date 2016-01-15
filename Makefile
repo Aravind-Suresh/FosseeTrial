@@ -16,9 +16,12 @@ LDFLAGS = -I/usr/local/include/opencv -I/usr/local/include  -L/usr/local/lib -lo
 # $(VAR) gives value of the variable.
 # $@ stores the target
 # $^ stores the dependency
-all: bin/demo
+all: bin/demo bin/test
 
-bin/demo: obj/imquantize.o obj/stdfilt.o obj/bwpack.o obj/main.o
+bin/demo: obj/imquantize.o obj/stdfilt.o obj/main.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+bin/test: obj/test.o obj/bwpack.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 obj/imquantize.o: src/imquantize.cpp
@@ -32,6 +35,9 @@ obj/bwpack.o: src/bwpack.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 obj/main.o: src/main.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+obj/test.o: src/test.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 # .PHONY tells make that 'all' or 'clean' aren't _actually_ files, and always
