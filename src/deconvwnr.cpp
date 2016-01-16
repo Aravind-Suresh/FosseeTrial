@@ -49,12 +49,16 @@ cv::Mat constructMat(psf, cv::Size size) {
   return dst;
 }
 
-cv::deconvwnr(cv::Mat src, ) {
+cv::Mat deconvwnr(cv::Mat src, cv::Mat matPsf, double nsr) {
   // Assume src is gray image
   // noise: 10**(-0.1*SNR)
 
+  // int szX = 65, szY = 65;
+  int szX = matPsf.cols, szY = matPsf.rows;
+  double noise = std::pow(10.0, -0.1/nsr);
   int rows = src.rows, cols = src.cols;
   cv::Mat srcF, srcBlurEdge, srcPad, srcDft;
+  cv::Mat matPsfDft, matPsfDftMag;
   src.convertTo(srcF, CV_32F, 1.0/255);
   srcBlurEdge = blurEdge(src, d);
 
@@ -64,10 +68,25 @@ cv::deconvwnr(cv::Mat src, ) {
   cv::copyMakeBorder(srcBlurEdge, srcPad, 0, rowsF-rows, 0, colsF-cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
   cv::Mat planes[] = { cv::Mat_<float>(srcPad), cv::Mat::zeros(srcPad.size(), CV_32F) };
   cv::merge(planes, 2, srcDft);
-  cv::dft(srcDft, srcDft);
+  cv::dft(srcDft, srcDft, cv::DFT_COMPLEX_OUTPUT);
 
-  cv::Mat matPsf = cv::constructMat(psf, src.size());
+  //cv::Mat matPsf = cv::constructMat(psf, cv::Size(szX, szY));
   matPsf = matPsf/cv::sum(matPsf);
-  cv::copyMakeBorder(matPsf, matPsfPad, 0, rowsF-rows, 0, colsF-cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+  cv::copyMakeBorder(matPsf, matPsfPad, 0, rowsF-szY, 0, colsF-szX, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+  cv::Mat planesPSF[] = { cv::Mat_<float>(matPsfPad), cv::Mat::zeros(matPsfPad.size(), CV_32F) };
+  cv::merge(planesPSF, 2, matPsfDft);
+  cv::dft(matPsfDft, matPsfDft, cv::DFT_COMPLEX_OUTPUT);
 
+  cv::magnitude(planesPSF[0], planesPSF[1], matPsfDftMag);
+  cv::pow(matPsfDftMag, 2, matPsfDftMag);
+  cv::Mat iPsfReal, iPsfImag, iPsf, resDft, res;
+  iPsfReal = planesPSF[0]/(matPsfDftMag + cv::Scalar::all(noise));
+  iPsfImag = planesPSF[1]/(matPsfDftMag + cv::Scalar::all(noise));
+  cv::Mat planesIPSF[] = {iPsfReal, iPsfImag};
+  cv::merge(planesIPSF, 2, iPsf);
+
+  cv::mulSpectrums(srcDft, iPsf, resDft);
+  cv::idft(resDft, res);
+
+  return res;
 }
