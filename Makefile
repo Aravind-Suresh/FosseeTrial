@@ -16,12 +16,12 @@ LDFLAGS = -I/usr/local/include/opencv -I/usr/local/include  -L/usr/local/lib -lo
 # $(VAR) gives value of the variable.
 # $@ stores the target
 # $^ stores the dependency
-all: bin/demo bin/test
+all: bin/demo
 
 bin/demo: obj/imquantize.o obj/stdfilt.o obj/main.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-bin/test: obj/test.o obj/bwpack.o
+bin/test: obj/test.o obj/deconvwnr.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 obj/imquantize.o: src/imquantize.cpp
@@ -32,6 +32,9 @@ obj/stdfilt.o: src/stdfilt.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 obj/bwpack.o: src/bwpack.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+obj/deconvwnr.o: src/deconvwnr.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 obj/main.o: src/main.cpp

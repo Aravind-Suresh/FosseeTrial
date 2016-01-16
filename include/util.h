@@ -31,4 +31,9 @@ cv::Mat stdfilt(cv::Mat src, int nhood = 3);
 int bit32Int(int* binArr, int size);
 cv::Mat bwpack(cv::Mat src);
 
+// Source: src/deconvwnr.cpp
+cv::Mat blurEdge(cv::Mat src, int d);
+// cv::Mat constructMat(psf, cv::Size size);
+cv::Mat deconvwnr(cv::Mat src, cv::Mat matPsf, double nsr);
+
 #endif

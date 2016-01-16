@@ -37,17 +37,17 @@
   return src*weights + srcBlur*(1.0 - weights);
 }
 
-cv::Mat constructMat(psf, cv::Size size) {
-  cv::Mat dst = cv::Mat::zeros(size, CV_32F);
-  int rows = size.height, cols = size.width;
-
-  for(int i=0; i<rows; ++i) {
-    for(int j=0; j<cols; ++j) {
-      dst.at<float>(i, j) = psf(i, j);
-    }
-  }
-  return dst;
-}
+// cv::Mat constructMat(int psf, cv::Size size) {
+//   cv::Mat dst = cv::Mat::zeros(size, CV_32F);
+//   int rows = size.height, cols = size.width;
+//
+//   for(int i=0; i<rows; ++i) {
+//     for(int j=0; j<cols; ++j) {
+//       dst.at<float>(i, j) = psf(i, j);
+//     }
+//   }
+//   return dst;
+// }
 
 cv::Mat deconvwnr(cv::Mat src, cv::Mat matPsf, double nsr) {
   // Assume src is gray image

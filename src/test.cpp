@@ -24,10 +24,11 @@ int main(int argc, char **argv) {
   }
 
   cv::Mat img = cv::imread(argv[1], 0);
-  cv:: threshold(img, img, 127, 255, cv::THRESH_BINARY);
-  // std::cout<<img;
-  // cv::Mat dst = bwpack(img), out;
-  // cv::normalize(dst, out, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+  // cv:: threshold(img, img, 127, 255, cv::THRESH_BINARY);
+  cv::Mat psf = (cv::Mat_<int>(3, 3) << (1,1,1, 1,1,1, 1,1,1));
+
+  cv::Mat dst = deconvwnr(img, psf, 0.04), out;
+  cv::normalize(dst, out, 0, 255, cv::NORM_MINMAX, CV_8UC1);
 
   // std::cout<<out;
 
