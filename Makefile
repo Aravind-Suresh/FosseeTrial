@@ -6,22 +6,25 @@ CXX = g++
 # Compilation flags
 # '-g' turns debugging flags on.
 # Not Using O2 flag for optimisation.
-CXXFLAGS = -g -I./include -I/usr/local/include/opencv -I/usr/local/include  -L/usr/local/lib -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_adas -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_datasets -lopencv_face -lopencv_latentsvm -lopencv_objdetect -lopencv_line_descriptor -lopencv_optflow -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_surface_matching -lopencv_text -lopencv_tracking -lopencv_xfeatures2d -lopencv_calib3d -lopencv_features2d -lopencv_shape -lopencv_video -lopencv_ml -lopencv_flann -lopencv_ximgproc -lopencv_xobjdetect -lopencv_xphoto -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_photo -lopencv_imgproc -lopencv_core -lopencv_hal
+CXXFLAGS = -g -I./include -I/usr/local/include/opencv -I/usr/local/include  -L/usr/local/lib -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_adas -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_datasets -lopencv_face -lopencv_latentsvm -lopencv_objdetect -lopencv_line_descriptor -lopencv_optflow -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_surface_matching -lopencv_text -lopencv_tracking -lopencv_xfeatures2d -lopencv_calib3d -lopencv_features2d -lopencv_shape -lopencv_video -lopencv_ml -lopencv_flann -lopencv_ximgproc -lopencv_xobjdetect -lopencv_xphoto -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_photo -lopencv_imgproc -lopencv_core -lopencv_hal -std=c++11
 
 # Linker flags
 # When you need to add a library
-LDFLAGS = -I/usr/local/include/opencv -I/usr/local/include  -L/usr/local/lib -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_adas -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_datasets -lopencv_face -lopencv_latentsvm -lopencv_objdetect -lopencv_line_descriptor -lopencv_optflow -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_surface_matching -lopencv_text -lopencv_tracking -lopencv_xfeatures2d -lopencv_calib3d -lopencv_features2d -lopencv_shape -lopencv_video -lopencv_ml -lopencv_flann -lopencv_ximgproc -lopencv_xobjdetect -lopencv_xphoto -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_photo -lopencv_imgproc -lopencv_core -lopencv_hal
+LDFLAGS = -I/usr/local/include/opencv -I/usr/local/include  -L/usr/local/lib -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_adas -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_datasets -lopencv_face -lopencv_latentsvm -lopencv_objdetect -lopencv_line_descriptor -lopencv_optflow -lopencv_reg -lopencv_rgbd -lopencv_saliency -lopencv_surface_matching -lopencv_text -lopencv_tracking -lopencv_xfeatures2d -lopencv_calib3d -lopencv_features2d -lopencv_shape -lopencv_video -lopencv_ml -lopencv_flann -lopencv_ximgproc -lopencv_xobjdetect -lopencv_xphoto -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_photo -lopencv_imgproc -lopencv_core -lopencv_hal -std=c++11
 
 # all is a target
 # $(VAR) gives value of the variable.
 # $@ stores the target
 # $^ stores the dependency
-all: bin/demo
+all: bin/demo bin/test bin/wiener2
 
 bin/demo: obj/imquantize.o obj/stdfilt.o obj/main.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-bin/test: obj/test.o obj/deconvwnr.o
+bin/test: obj/test.o obj/dct.o
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+bin/wiener2: obj/wiener2.o
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 obj/imquantize.o: src/imquantize.cpp
@@ -31,10 +34,16 @@ obj/imquantize.o: src/imquantize.cpp
 obj/stdfilt.o: src/stdfilt.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
+obj/wiener2.o: src/wiener2.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
 obj/bwpack.o: src/bwpack.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 obj/deconvwnr.o: src/deconvwnr.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+obj/dct.o: src/dct.cpp
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 obj/main.o: src/main.cpp

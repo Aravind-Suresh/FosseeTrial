@@ -36,4 +36,7 @@ cv::Mat blurEdge(cv::Mat src, int d);
 // cv::Mat constructMat(psf, cv::Size size);
 cv::Mat deconvwnr(cv::Mat src, cv::Mat matPsf, double nsr);
 
+// Source: src/dct.cpp
+cv::Mat dct(cv::Mat src, int n = 0);
+
 #endif
